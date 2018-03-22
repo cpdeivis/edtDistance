@@ -11,7 +11,7 @@ int min(int top, int left, int dia){
 //endregion
 //Encaminha a matriz e a posição cartesiana da célula em questão + strings
 int compare(int **matriz, int i, int j, std::string * s0, std::string * s1){
-  return min(matriz[i-1][j-1], matriz[i-1][j], matriz[i][j-1]) + ((*s0)[i-1] == (*s1)[j-1] ? 0 : 1);
+  return min(matriz[i-1][j-1], matriz[i-1][j], matriz[i][j-1]) + ((*s0)[i-1] == (*s1)[j-1] && i == j ? 0 : 1);
 }
 void edtDistance(std::string* s0, std::string* s1){
   //region Cria e pre-Popula M A T R I X
@@ -31,11 +31,8 @@ void edtDistance(std::string* s0, std::string* s1){
     //Slices
     for(i = t, j = 1; i >= 1 ; --i, ++j)
       if((i < rows) && (j < cols)){
-        //std::cout << i << ", " << j << " | ";
         matriz[i][j] = compare(matriz, i, j, s0, s1);
-        //std::cout << matriz[i][j];
       }
-    //std::cout << std::endl;
   }
   //endregion
 

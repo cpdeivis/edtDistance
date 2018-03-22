@@ -27,26 +27,24 @@ void edtDistance2(std::string* s0, std::string* s1){
   //endregion
   // sl = Slices/Fatias/Diagonal_Atual
   for(int sl = 2, istart, iend; sl <= s0len + s1len; sl++){
-    std::cout << std::endl;
     istart = max(1, sl - s1len);
     iend = min(sl - 1, s0len);
     // Fill Diagonals with base, if need
-    if(sl <= sMin){
+    if(sl <= sMin)
       dAtual[0] = sl;
+    if(sl <= sMax)
       dAtual[sl] = sl;
-    }
     // Real Joke is Here =/
     for(int i = istart, j; i <= iend; i++){
         j = sl - i;
-        dAtual[i] = min(dAnterior[i], dAnterior[i-1], dAnterior2[i - 1]) + ((*s0)[j - 1] == (*s1)[i - 1] ? 0 : 1);
-        std::cout << dAtual[i] << std::endl;
+        dAtual[i] = min(dAnterior[i], dAnterior[i-1], dAnterior2[i - 1]) + ((*s0)[j - 1] == (*s1)[i - 1] && i == j ? 0 : 1);
     }
-
+    dTemp = dAnterior2;
     dAnterior2 = dAnterior;
     dAnterior = dAtual;
     dAtual = dTemp;
   }
-  std::cout << dAnterior[(*s1).size()] << std::endl;
+  std::cout << dAnterior[s0len] << std::endl;
 }
 
 int main() {
