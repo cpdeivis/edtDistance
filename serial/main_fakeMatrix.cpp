@@ -1,5 +1,7 @@
 #include <iostream>
+#include <fstream>
 #include <string>
+#include <iterator>
 
 //region M-in(ax)'s
 int min(int a, int b){
@@ -44,10 +46,15 @@ int edtDistance(std::string* s0, std::string* s1){
     dAnterior = dAtual;
     dAtual = dTemp;
   }
-  return dAnterior[s1len];
+  int result = dAnterior[s1len];
+  //delete[] dTemp;
+  delete[] dAnterior2;
+  delete[] dAnterior;
+  delete[] dAtual;
+  return result;
 }
-int lcs(std::string* s0, std::string* s1){
-  int s0len = (*s0).size(), s1len = (*s1).size();
+int lcs(const std::string &s0, const std::string &s1){
+  int s0len = (s0).size(), s1len = (s1).size();
   int sMax = max(s0len, s1len) + 1, sMin = min(s0len, s1len);
   //region Create Diagonals
   int * dAnterior2 {new int[sMax]};
@@ -70,7 +77,7 @@ int lcs(std::string* s0, std::string* s1){
     // Another real Joke is Here =/
     for(int i = istart, j; i <= iend; i++){
         j = sl - i;
-        if((*s0)[j - 1] == (*s1)[i - 1])
+        if((s0)[j - 1] == (s1)[i - 1])
           dAtual[i] = dAnterior2[i - 1] + 1;
         else
           dAtual[i] = max(dAnterior[i], dAnterior[i-1]);
@@ -80,16 +87,33 @@ int lcs(std::string* s0, std::string* s1){
     dAnterior = dAtual;
     dAtual = dTemp;
   }
-  return dAnterior[s1len];
+  int result = dAnterior[s1len];
+  delete[] dAtual;
+  // When uncomment this line, valgrind cries harder than now
+  //delete[] dTemp;
+  delete[] dAnterior2;
+  delete[] dAnterior;
+  return result;
 }
 
 int main() {
-  std::string s0, s1;
-  std::cin >> s0;
-  std::cin >> s1;
-  if(s0.size() < s1.size())
-    s0.swap(s1);
-  std::cout << edtDistance(&s0, &s1) << std::endl;
-  std::cout << lcs(&s0, &s1) << std::endl;
+  std::string s0, n0, s1, n1;
+  std::ifstream entrada0{"inputs/test0.txt"}, entrada1{"inputs/test1.txt"};
+  if(entrada0.is_open() && entrada1.is_open()){
+    std::getline(entrada0, n0);
+    s0 = { std::istreambuf_iterator<char>(entrada0), std::istreambuf_iterator<char>() };
+    std::getline(entrada1,n1);
+    s1 = { std::istreambuf_iterator<char>(entrada1), std::istreambuf_iterator<char>() };
+    entrada0.close();
+    entrada1.close();
+    std::cout << n0 << s0.size() <<" | " << n1 << s1.size() << std::endl;
+    if(s0.size() < s1.size())
+      std::cout << lcs(s1, s0) << std::endl;
+    else
+      std::cout << lcs(s0, s1) << std::endl;
+      //s0.swap(s1);
+    //std::cout << lcs(s0, s1) << std::endl;
+    //std::cout << n0 << s0.size() <<" | " << n1 << s1.size() << std::endl;
+  }
   return 0;
 }
